@@ -2,8 +2,9 @@ package com.chinesecz.service.weixin;
 
 import com.chinesecz.domain.req.WeixinQrcodeReq;
 import com.chinesecz.domain.res.WeixinQrcodeRes;
+import com.chinesecz.domain.res.WeixinTemplateMessageRes;
 import com.chinesecz.domain.res.WeixinTokenRes;
-import com.chinesecz.domain.vo.WeixinTemplateMessageVO;
+import com.chinesecz.domain.req.WeixinTemplateMessageReq;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -39,9 +40,9 @@ public interface IWeixinApiService {
     /**
      * 接口文档：https://mp.weixin.qq.com/debug/cgi-bin/readtmpl?t=tmplmsg/faq_tmpl
      * @param accessToken
-     * @param weixinTemplateMessageVO
+     * @param weixinTemplateMessageReq
      * @return
      */
     @POST("cgi-bin/message/template/send")
-    Call<Void> sendMessage(@Query("access_token") String accessToken, @Body WeixinTemplateMessageVO weixinTemplateMessageVO);
+    Call<WeixinTemplateMessageRes> sendMessage(@Query("access_token") String accessToken, @Body WeixinTemplateMessageReq weixinTemplateMessageReq);
 }

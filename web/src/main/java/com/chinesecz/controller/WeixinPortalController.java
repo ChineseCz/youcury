@@ -5,6 +5,7 @@ import com.chinesecz.common.weixin.MessageEntity.MessagePictureEntity;
 import com.chinesecz.common.weixin.MessageEntity.MessageTextEntity;
 import com.chinesecz.common.weixin.SignatureUtil;
 import com.chinesecz.common.weixin.XmlUtil;
+import com.chinesecz.service.impl.WeixinLoginServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +19,15 @@ import java.util.Map;
 @RequestMapping("/api/v1/weixin/portal/")
 public class WeixinPortalController {
 
+    private final WeixinLoginServiceImpl weixinLoginServiceImpl;
     @Value("${weixin.config.originalid}")
     private String originalid;
     @Value("${weixin.config.token}")
     private String token;
+
+    public WeixinPortalController(WeixinLoginServiceImpl weixinLoginServiceImpl) {
+        this.weixinLoginServiceImpl = weixinLoginServiceImpl;
+    }
 
     @GetMapping(value = "receive")
     public String validate(@RequestParam("signature") String signature,
@@ -47,11 +53,23 @@ public class WeixinPortalController {
 
     }
 
+    /**
+     * POST请求接口，接收公众号发送的任意类型信息并做相应处理。
+     * @param requestBody
+     * @return
+     */
     @PostMapping(value = "receive",produces = "application/xml; charset=UTF-8")
     public String receiveMsg(@RequestBody String requestBody) {
         try {
             log.info("接受信息");
             MessageEntity msg = XmlUtil.xmlToBean(requestBody, MessageEntity.class);
+
+            //扫码事件
+            if (msg.getMsgType().equals("event") && msg.getEvent().equals("SCAN")) {
+                weixinLoginServiceImpl.saveLoginState(msg.getTicket(), msg.getFromUserName());
+                return buildMessageTextEntity(msg.getFromUserName(),"登录成功");
+            }
+
 
             return buildMessageTextEntity(msg.getFromUserName(),msg.getContent());
 

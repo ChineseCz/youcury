@@ -1,4 +1,4 @@
-package com.chinesecz.domain.vo;
+package com.chinesecz.domain.req;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,14 +8,14 @@ import java.util.Map;
  * @description 微信模板消息
  * @create 2024-09-28 13:38
  */
-public class WeixinTemplateMessageVO {
+public class WeixinTemplateMessageReq {
 
     private String touser = "or0Ab6ivwmypESVp_bYuk92T6SvU";
     private String template_id = "GLlAM-Q4jdgsktdNd35hnEbHVam2mwsW2YWuxDhpQkU";
     private String url = "https://weixin.qq.com";
     private Map<String, Map<String, String>> data = new HashMap<>();
 
-    public WeixinTemplateMessageVO(String touser, String template_id) {
+    public WeixinTemplateMessageReq(String touser, String template_id) {
         this.touser = touser;
         this.template_id = template_id;
     }

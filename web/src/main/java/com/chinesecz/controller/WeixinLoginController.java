@@ -7,6 +7,7 @@ import com.chinesecz.service.weixin.IWeixinApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -44,6 +45,33 @@ public class WeixinLoginController {
         }
 
     }
+
+    @RequestMapping("check_login")
+    public Response<String> checkLogin(@RequestParam("ticket") String ticket) {
+        try {
+            log.info("校验登录状态");
+            String openid = weixinLoginService.checkLogin(ticket);
+            log.info("openid:{}",openid);
+            if (openid != null) {
+                return Response.<String>builder()
+                        .code(Constants.ResponseCode.SUCCESS.getCode())
+                        .info(Constants.ResponseCode.SUCCESS.getInfo())
+                        .data(openid)
+                        .build();
+            }
+            return Response.<String>builder()
+                    .code(Constants.ResponseCode.NO_LOGIN.getCode())
+                    .info(Constants.ResponseCode.NO_LOGIN.getInfo())
+                    .build();
+        } catch (Exception e) {
+            log.error("查询登录状态失败");
+            return Response.<String>builder()
+                    .code(Constants.ResponseCode.UN_ERROR.getCode())
+                    .info(Constants.ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
 
 
 }

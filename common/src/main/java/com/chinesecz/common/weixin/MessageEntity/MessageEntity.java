@@ -29,6 +29,9 @@ public class MessageEntity {
     @XStreamAlias("MsgId")
     private String msgId;
 
+    @XStreamAlias("MsgID")
+    private String msgID;
+
     @XStreamAlias("MsgDataId")
     private String MsgDataId;
 
