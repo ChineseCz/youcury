@@ -1,11 +1,11 @@
-package com.chinesecz.common.weixin;
+package com.chinesecz.common.weixin.MessageEntity;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;
 
 @Data
 @XStreamAlias("xml")
-public class MessageTextEntity {
+public class MessagePictureEntity {
 
     @XStreamAlias("ToUserName")
     private String toUserName;
@@ -19,23 +19,23 @@ public class MessageTextEntity {
     @XStreamAlias("MsgType")
     private String msgType;
 
-    @XStreamAlias("Event")
-    private String event;
+    @XStreamAlias("PicUrl")
+    private String picUrl;
 
-    @XStreamAlias("EventKey")
-    private String eventKey;
+    @XStreamAlias("MediaId")
+    private String mediaId;
 
-    @XStreamAlias("MsgID")
+
+
+    @XStreamAlias("MsgId")
     private String msgId;
 
-    @XStreamAlias("Status")
-    private String status;
+    @XStreamAlias("MsgDataId")
+    private String MsgDataId;
 
-    @XStreamAlias("Ticket")
-    private String ticket;
+    @XStreamAlias("Idx")
+    private String idx;
 
-    @XStreamAlias("Content")
-    private String content;
 
 
 }

@@ -26,8 +26,12 @@ public class WeixinQrcodeReq {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ActionInfo {
-        Scene scne;
+        Scene scene;
 
+        @Data
+        @Builder
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class Scene {
             int scene_id;
             String scene_str;

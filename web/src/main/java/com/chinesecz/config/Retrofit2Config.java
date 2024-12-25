@@ -1,6 +1,7 @@
 package com.chinesecz.config;
 
 
+import com.chinesecz.service.weixin.IWeixinApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,10 @@ public class Retrofit2Config {
                 .addConverterFactory(JacksonConverterFactory.create())
 
                 .build();
+    }
+    @Bean
+    public IWeixinApiService weixinApiService(Retrofit retrofit) {
+        return retrofit.create(IWeixinApiService.class);
     }
 
 
