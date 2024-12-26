@@ -2,8 +2,7 @@ package com.chinesecz.controller;
 
 import com.chinesecz.common.constants.Constants;
 import com.chinesecz.common.response.Response;
-import com.chinesecz.service.IWeixinLoginService;
-import com.chinesecz.service.weixin.IWeixinApiService;
+import com.chinesecz.service.weixin.IWeixinLoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

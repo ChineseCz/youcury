@@ -6,7 +6,7 @@ import com.chinesecz.domain.req.WeixinTemplateMessageReq;
 import com.chinesecz.domain.res.WeixinQrcodeRes;
 import com.chinesecz.domain.res.WeixinTemplateMessageRes;
 import com.chinesecz.domain.res.WeixinTokenRes;
-import com.chinesecz.service.IWeixinLoginService;
+import com.chinesecz.service.weixin.IWeixinLoginService;
 import com.chinesecz.service.weixin.IWeixinApiService;
 import com.google.common.cache.Cache;
 import org.slf4j.Logger;
