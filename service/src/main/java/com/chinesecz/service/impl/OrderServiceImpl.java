@@ -1,6 +1,7 @@
 package com.chinesecz.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
@@ -12,6 +13,7 @@ import com.chinesecz.domain.res.PayOrderRes;
 import com.chinesecz.domain.vo.ProductVO;
 import com.chinesecz.service.IOrderService;
 import com.chinesecz.service.rpc.ProductRPC;
+import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -37,6 +41,8 @@ public class OrderServiceImpl implements IOrderService {
     @Resource
     private ProductRPC productRPC;
 
+    @Resource
+    private EventBus eventBus;
     /**
      * 创建订单
      * @param shopCartReq 购物请求
@@ -100,6 +106,31 @@ public class OrderServiceImpl implements IOrderService {
                 .userId(shopCartReq.getUserId())
                 .payUrl(payOrder.getPayUrl())
                 .build();
+    }
+
+    @Override
+    public void changeOrderPaySuccess(String orderId) {
+        PayOrder payOrderReq = new PayOrder();
+        payOrderReq.setOrderId(orderId);
+        payOrderReq.setStatus(Constants.OrderStatusEnum.PAY_SUCCESS.getCode());
+        orderDao.changeOrderPaySuccess(payOrderReq);
+
+        eventBus.post(JSON.toJSONString(payOrderReq));
+    }
+
+    @Override
+    public boolean changeOrderClose(String orderId) {
+        return orderDao.changeOrderClose(orderId);
+    }
+
+    @Override
+    public List<String> queryNoPayNotifyOrder() {
+        return orderDao.queryNoPayNotifyOrder();
+    }
+
+    @Override
+    public List<String> queryTimeoutCloseOrderList() {
+        return orderDao.queryTimeoutCloseOrderList();
     }
 
     /**
