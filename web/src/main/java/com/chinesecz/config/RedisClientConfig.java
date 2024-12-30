@@ -15,11 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
 
-/**
- * @author Fuzhengwei bugstack.cn @小傅哥
- * @description Redis 客户端，使用 Redisson <a href="https://github.com/redisson/redisson">Redisson</a>
- * @create 2023-09-09 16:51
- */
+
 @Configuration
 public class RedisClientConfig {
 

@@ -2,11 +2,7 @@ package com.chinesecz.service.redis;
 
 import org.redisson.api.*;
 
-/**
- * @author Fuzhengwei bugstack.cn @小傅哥
- * @description Redis 服务
- * @create 2023-09-04 07:46
- */
+
 public interface IRedisService {
 
     /**
