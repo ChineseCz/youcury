@@ -10,6 +10,7 @@ import com.chinesecz.service.redis.IRedisService;
 import com.chinesecz.service.weixin.IWeixinLoginService;
 import com.chinesecz.service.weixin.IWeixinApiService;
 import com.google.common.cache.Cache;
+import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,10 @@ public class WeixinLoginServiceImpl implements IWeixinLoginService {
     @Resource
     private Cache<String, String> openidToken;
 
+    @Resource
+    private RMap<String, String> redisWeixinAccessToken;
+    @Resource
+    private RMap<String, String> redisOpenidToken;
 
     @Override
     public String createQrCodeTicket() throws Exception {
@@ -73,12 +78,15 @@ public class WeixinLoginServiceImpl implements IWeixinLoginService {
 
     @Override
     public String checkLogin(String ticket) {
+//        return openidToken.getIfPresent(ticket);
         return openidToken.getIfPresent(ticket);
     }
+
 
     @Override
     public void saveLoginState(String ticket, String openid) throws Exception {
         openidToken.put(ticket,openid);
+        redisWeixinAccessToken.put(ticket,openid);
 
         String accessToken = getWeixinAccessToken();
 
@@ -87,7 +95,7 @@ public class WeixinLoginServiceImpl implements IWeixinLoginService {
         WeixinTemplateMessageReq.put(data, WeixinTemplateMessageReq.TemplateKey.USER, openid);
 
         WeixinTemplateMessageReq templateMessageDTO = new WeixinTemplateMessageReq(openid, templateId);
-        templateMessageDTO.setUrl("https://gaga.plus");
+        templateMessageDTO.setUrl("https://github.com");
         templateMessageDTO.setData(data);
 
         log.info("模板信息");
@@ -100,12 +108,16 @@ public class WeixinLoginServiceImpl implements IWeixinLoginService {
 
     public String getWeixinAccessToken() throws IOException {
         String accessToken = weixinAccessToken.getIfPresent(appid);
+        //加入redis
+        accessToken = redisWeixinAccessToken.getOrDefault(appid,accessToken);
+
         if (null == accessToken) {
             Call<WeixinTokenRes> call = weixinApiService.getToken("client_credential", appid, appSecret);
             WeixinTokenRes weixinTokenRes = call.execute().body();
             assert weixinTokenRes != null;
             accessToken = weixinTokenRes.getAccess_token();
             weixinAccessToken.put(appid, accessToken);
+            redisWeixinAccessToken.put(appid,accessToken);
         }
         return accessToken;
     }
