@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class RedisTopicListener01 implements MessageListener<String> {
+public class OrderPaySuccessByRedisListener implements MessageListener<String> {
 
     @Override
     public void onMessage(CharSequence channel, String msg) {
-        log.info("01-监听消息(Redis 发布/订阅): {}", msg);
+        log.info("监听支付成功消息(Redis): {}", msg);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.chinesecz.config;
 
 
-import com.chinesecz.listener.RedisTopicListener01;
+import com.chinesecz.listener.OrderPaySuccessByRedisListener;
 import org.redisson.Redisson;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
@@ -23,14 +23,14 @@ public class RedisClientConfig {
     private RedissonClient redissonClient;
 
     @Resource
-    private RedisTopicListener01 redisTopicListener01;
+    private OrderPaySuccessByRedisListener redisTopicListener01;
 
     /**
      * 手动配置
      */
-    @Bean("testRedisTopic")
-    public RTopic testRedisTopicListener(RedissonClient redissonClient, RedisTopicListener01 redisTopicListener) {
-        RTopic topic = redissonClient.getTopic("xfg-dev-tech-topic");
+    @Bean("paySuccessTopic")
+    public RTopic testRedisTopicListener(RedissonClient redissonClient, OrderPaySuccessByRedisListener redisTopicListener) {
+        RTopic topic = redissonClient.getTopic("监听支付回调");
         topic.addListener(String.class, redisTopicListener);
         return topic;
     }

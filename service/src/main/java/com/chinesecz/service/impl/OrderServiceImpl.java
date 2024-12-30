@@ -13,10 +13,13 @@ import com.chinesecz.domain.res.PayOrderRes;
 import com.chinesecz.domain.vo.ProductVO;
 import com.chinesecz.service.IOrderService;
 import com.chinesecz.service.redis.IRedisService;
+import com.chinesecz.service.redis.RedissonService;
 import com.chinesecz.service.rpc.ProductRPC;
 import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -46,7 +49,11 @@ public class OrderServiceImpl implements IOrderService {
     private EventBus eventBus;
 
     @Resource
-    private IRedisService iRedisService;
+    private RTopic paySuccessTopic;
+
+
+    @Resource
+    private IRedisService redisService;
 
     /**
      * 创建订单
@@ -89,28 +96,31 @@ public class OrderServiceImpl implements IOrderService {
 
         //首次下单——查询商品，创建订单
         ProductVO productVO = productRPC.queryProductByProductId(shopCartReq.getProductId());
-        String orderId = RandomStringUtils.randomNumeric(16);
-        orderDao.insert(PayOrder.builder()
-                        .userId(shopCartReq.getUserId())
-                        .productId(shopCartReq.getProductId())
-                        .productName(productVO.getProductName())
-                        .orderTime(new Date())
-                        .orderId(orderId)
-                        .totalAmount(productVO.getPrice())
-                        .status(Constants.OrderStatusEnum.CREATE.getCode())
-                .build());
+        RLock rLock = redisService.getLock(shopCartReq.getUserId()+"_"+shopCartReq.getProductId());
+        try {
+            rLock.lock();
+            String orderId = RandomStringUtils.randomNumeric(16);
+            orderDao.insert(PayOrder.builder()
+                    .userId(shopCartReq.getUserId())
+                    .productId(shopCartReq.getProductId())
+                    .productName(productVO.getProductName())
+                    .orderTime(new Date())
+                    .orderId(orderId)
+                    .totalAmount(productVO.getPrice())
+                    .status(Constants.OrderStatusEnum.CREATE.getCode())
+                    .build());
 
-        //后续支付单
-        PayOrder payOrder = createPayOrder(productVO.getProductId(), orderId, productVO.getProductName(), productVO.getPrice());
+            //后续支付单
+            PayOrder payOrder = createPayOrder(productVO.getProductId(), orderId, productVO.getProductName(), productVO.getPrice());
 
-
-
-
-        return PayOrderRes.builder()
-                .orderId(orderId)
-                .userId(shopCartReq.getUserId())
-                .payUrl(payOrder.getPayUrl())
-                .build();
+            return PayOrderRes.builder()
+                    .orderId(orderId)
+                    .userId(shopCartReq.getUserId())
+                    .payUrl(payOrder.getPayUrl())
+                    .build();
+        } finally {
+            rLock.unlock();
+        }
     }
 
     @Override
@@ -120,7 +130,10 @@ public class OrderServiceImpl implements IOrderService {
         payOrderReq.setStatus(Constants.OrderStatusEnum.PAY_SUCCESS.getCode());
         orderDao.changeOrderPaySuccess(payOrderReq);
 
+        //消息通知
         eventBus.post(JSON.toJSONString(payOrderReq));
+        paySuccessTopic.publish(JSON.toJSONString(payOrderReq));
+
     }
 
     @Override
