@@ -25,6 +25,6 @@ public class OrderServiceTest {
         shopCartReq.setUserId("youcury");
         PayOrderRes payOrderRes = orderService.createOrder(shopCartReq);
         log.info("测试结果，{}",payOrderRes);
-
+//
     }
 }
