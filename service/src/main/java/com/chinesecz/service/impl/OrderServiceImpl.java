@@ -12,6 +12,7 @@ import com.chinesecz.domain.req.ShopCartReq;
 import com.chinesecz.domain.res.PayOrderRes;
 import com.chinesecz.domain.vo.ProductVO;
 import com.chinesecz.service.IOrderService;
+import com.chinesecz.service.redis.IRedisService;
 import com.chinesecz.service.rpc.ProductRPC;
 import com.google.common.eventbus.EventBus;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,10 @@ public class OrderServiceImpl implements IOrderService {
 
     @Resource
     private EventBus eventBus;
+
+    @Resource
+    private IRedisService iRedisService;
+
     /**
      * 创建订单
      * @param shopCartReq 购物请求

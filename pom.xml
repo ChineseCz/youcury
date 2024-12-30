@@ -112,6 +112,12 @@
                 <artifactId>alipay-sdk-java</artifactId>
                 <version>4.38.157.ALL</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.chinesecz.middleware</groupId>
+                <artifactId>dynamic-thread-pool</artifactId>
+                <version>1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

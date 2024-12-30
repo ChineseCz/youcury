@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Service
 public class ProductRPC {
 
+
     public ProductVO queryProductByProductId(String productId){
         ProductVO productVO = new ProductVO();
         productVO.setProductId(productId);

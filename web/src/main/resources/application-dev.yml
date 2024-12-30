@@ -1,11 +1,38 @@
 server:
   port: 8080
-  tomcat:
-    max-connections: 20
-    threads:
-      max: 20
-      min-spare: 10
-    accept-count: 10
+
+tomcat:
+  max-connections: 20
+  threads:
+    max: 20
+    min-spare: 10
+  accept-count: 10
+
+redis:
+  host: localhost
+  port: 6378
+
+# 动态线程池管理配置
+dynamic:
+  thread:
+    pool:
+      config:
+        # 状态；true = 开启、false 关闭
+        enabled: true
+        # redis host
+        host: localhost
+        # redis port
+        port: 6379
+# 线程池配置
+thread:
+  pool:
+    executor:
+      config:
+        core-pool-size: 20
+        max-pool-size: 50
+        keep-alive-time: 5000
+        block-queue-size: 5000
+        policy: CallerRunsPolicy
 
 #微信号
 weixin:

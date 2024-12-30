@@ -1,5 +1,7 @@
 spring:
   config:
     name: youcury
+  application:
+    name: youcury
   profiles:
     active: dev

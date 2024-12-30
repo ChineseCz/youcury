@@ -6,9 +6,11 @@ import com.chinesecz.domain.req.WeixinTemplateMessageReq;
 import com.chinesecz.domain.res.WeixinQrcodeRes;
 import com.chinesecz.domain.res.WeixinTemplateMessageRes;
 import com.chinesecz.domain.res.WeixinTokenRes;
+import com.chinesecz.service.redis.IRedisService;
 import com.chinesecz.service.weixin.IWeixinLoginService;
 import com.chinesecz.service.weixin.IWeixinApiService;
 import com.google.common.cache.Cache;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,9 @@ public class WeixinLoginServiceImpl implements IWeixinLoginService {
     private String appSecret;
     @Value("${weixin.config.template_id}")
     private String templateId;
+
+    @Resource
+    private IRedisService redisService;
 
     @Resource
     private Cache<String, String> weixinAccessToken;
