@@ -82,7 +82,7 @@ public class WeixinLoginServiceImpl implements IWeixinLoginService {
         WeixinTemplateMessageReq.put(data, WeixinTemplateMessageReq.TemplateKey.USER, openid);
 
         WeixinTemplateMessageReq templateMessageDTO = new WeixinTemplateMessageReq(openid, templateId);
-        templateMessageDTO.setUrl("https://gaga.plus");
+        templateMessageDTO.setUrl("https://github.com");
         templateMessageDTO.setData(data);
 
         log.info("模板信息");
